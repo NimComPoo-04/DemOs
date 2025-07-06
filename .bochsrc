@@ -1,0 +1,12 @@
+megs: 32
+
+ata0-master: type=disk, path=build/os.bin, cylinders=1, heads=1, spt=2
+boot: disk
+
+log: log.txt
+mouse: enabled=0
+
+romimage: file=/usr/share/bochs/BIOS-qemu-latest
+vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
+
+display_library: sdl2, options="gui_debug"
