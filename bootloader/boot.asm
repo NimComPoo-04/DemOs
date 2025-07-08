@@ -51,7 +51,7 @@ init:
     out 0x92, al
 
     ; read next sector
-    mov di, 2
+    mov di, 8
     call read_sectors
 
     mov di, DISK_READ

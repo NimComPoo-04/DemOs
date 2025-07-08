@@ -6,7 +6,7 @@
 #define VGA_MEMORY_END   0xB8FFF
 
 static uint8_t screen_width = 80;
-static uint8_t screen_height = 25;
+// static uint8_t screen_height = 25;
 static uint16_t screen_res = 80 * 25;
 
 static uint16_t *screen = (uint16_t *)VGA_MEMORY_START;
@@ -48,6 +48,10 @@ int putc(char mem, char mod)
             cursor -= (cursor % screen_width);
             break;
 
+        case ' ':
+            screen[cursor++] = (mod << 8) | 0;
+            break;
+
         default:
             screen[cursor++] = (mod << 8) | mem;
     }
@@ -62,4 +66,17 @@ int putc(char mem, char mod)
 void puts(char *mem, char mod)
 {
     while(putc(*mem++, mod));
+}
+
+void put_hex(char mem, char mod)
+{
+    char *hexcodes = "0123456789ABCDEF";
+    char str[2] = { hexcodes[(mem >> 4) & 0xF],
+                    hexcodes[mem & 0xF] };
+
+    putc('0', mod);
+    putc('x', mod);
+    putc(str[0], mod);
+    putc(str[1], mod);
+    putc(' ', mod);
 }

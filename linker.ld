@@ -6,7 +6,7 @@ OUTPUT_FORMAT(binary)
 /* This is for safety because my dumb bootloader otherwise might not read the
  * whole kernel */
 MEMORY {
-    IMG (RW) : ORIGIN = 0x10000, LENGTH = 1K
+    IMG (RW) : ORIGIN = 0x10000, LENGTH = 4K
 }
 
 SECTIONS

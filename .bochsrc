@@ -1,6 +1,6 @@
 megs: 32
 
-ata0-master: type=disk, path=build/os.bin, cylinders=1, heads=1, spt=2
+ata0-master: type=disk, path=build/os.bin, cylinders=1, heads=1, spt=8
 boot: disk
 
 log: log.txt
