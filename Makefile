@@ -20,7 +20,7 @@ kernel: $(BUILD_DIR)/kernel.bin linker.ld
 $(BUILD_DIR)/bootloader.bin: bootloader/boot.asm
 	$(AS) $(AFLAGS) -o $@ $^
 
-$(BUILD_DIR)/kernel.bin: $(BUILD_DIR)/kmain.o $(BUILD_DIR)/kinit.o $(BUILD_DIR)/vga.o $(BUILD_DIR)/keyboard.o
+$(BUILD_DIR)/kernel.bin: $(BUILD_DIR)/kmain.o $(BUILD_DIR)/kinit.o $(BUILD_DIR)/vga.o $(BUILD_DIR)/keyboard.o $(BUILD_DIR)/ata.o
 	ld -T linker.ld $^ -o $@
 
 $(BUILD_DIR)/%.o: kernel/%.c

@@ -51,7 +51,7 @@ init:
     out 0x92, al
 
     ; read next sector
-    mov di, 8
+    mov di, SECTOR_READ_COUNT
     call read_sectors
 
     mov di, DISK_READ
@@ -266,6 +266,8 @@ STRBUFF: times 64 db EOL
 ; Information on the disk
 
 DISK_READ: db "Kernel read successfully!", CR, LF, EOL
+
+SECTOR_READ_COUNT equ 8
 
 times 510 - ($ - $$) db 0
 dw 0xAA55
