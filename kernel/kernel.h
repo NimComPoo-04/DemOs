@@ -9,8 +9,11 @@ uint8_t inb(uint16_t port);
 void outw(uint16_t port, uint16_t data);
 uint16_t inw(uint16_t port);
 
-void insw(uint16_t port, void *addr, uint32_t size);
+uint32_t insw(uint16_t port, void *addr, uint32_t size);
 
 void panik(void);
+
+extern uint8_t *_KERNEL_END_;
+extern uint8_t *_KERNEL_START_;
 
 #endif

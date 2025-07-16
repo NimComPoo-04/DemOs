@@ -1,0 +1,5 @@
+Hello This is a test file, Idea is that we create the image and
+read it from the computer if it works out we are golden otherwise we are completely
+fked.
+
+He He He He He Dracoids

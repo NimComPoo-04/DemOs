@@ -267,7 +267,7 @@ STRBUFF: times 64 db EOL
 
 DISK_READ: db "Kernel read successfully!", CR, LF, EOL
 
-SECTOR_READ_COUNT equ 8
+SECTOR_READ_COUNT equ 16
 
 times 510 - ($ - $$) db 0
 dw 0xAA55

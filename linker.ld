@@ -6,13 +6,13 @@ OUTPUT_FORMAT(binary)
 /* This is for safety because my dumb bootloader otherwise might not read the
  * whole kernel */
 MEMORY {
-    IMG (RW) : ORIGIN = 0x10000, LENGTH = 4K
+    IMG (RW) : ORIGIN = 0x10000, LENGTH = 8K
 }
 
 SECTIONS
 {
-    . = 0x10000;     /* At 64kb */
-
+    . = 0x10000;          /* At 64kb */
+    _KERNEL_START_ = .;
     .text : ALIGN(8) {
         *(.text);
     } > IMG 

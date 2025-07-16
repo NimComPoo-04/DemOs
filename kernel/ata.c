@@ -2,20 +2,8 @@
 #include "ata.h"
 #include "vga.h"
 
-#define ATA_IO_BASE   0x1F0
-#define ATA_CTRL_BASE 0x3F6
-
-#define ATA_DRIVE_SELECT (ATA_IO_BASE + 6)
-#define ATA_SECTOR_COUNT (ATA_IO_BASE + 2)
-
-#define ATA_LBA_LO (ATA_IO_BASE + 3)
-#define ATA_LBA_MI (ATA_IO_BASE + 4)
-#define ATA_LBA_HI (ATA_IO_BASE + 5)
-
-#define ATA_IO_STATUS (ATA_IO_BASE + 7)
-#define ATA_IO_COMMAND (ATA_IO_BASE + 7)
-
 static uint32_t sectors_count = 0;
+static uint32_t sectors_lba = 0;
 
 uint8_t hdd_status()
 {
@@ -31,7 +19,6 @@ uint8_t hdd_status()
 
     // reading the number of addressible LBA's on the drive
 
-    extern uint16_t *_KERNEL_END_;
     uint16_t *scratch = _KERNEL_END_;
 
     // read all the bytes bro
@@ -40,9 +27,11 @@ uint8_t hdd_status()
     uint32_t drive = scratch[59];
     drive = (drive << 16) | (scratch[60]);
 
+    // last read lba
+    sectors_lba = 0;
     sectors_count = drive;
 
-    puts("Sectors in drive = ", 0x0f);
+    puts("Sectors in drive: ", 0xa);
     put_hex((drive & 0xFF00) >> 8, 0x0f);
     put_hex(drive & 0xFF, 0x0f);
     puts("\n\r", 0x0f);
@@ -53,12 +42,21 @@ uint8_t hdd_status()
     for(int i = 0; i < 15; i++)
         stat = inb(status);
 
+    puts("Disk Status: ", 0xa);
+    put_hex(stat, 0x0f);
+    puts("\n\r", 0x0f);
+
     return stat;
+}
+
+uint32_t get_total_sectors()
+{
+    return sectors_count;
 }
 
 // each sectors is 512 bytes long,
 //
-void read_sectors(void *where, uint32_t lba, int count)
+uint32_t read_sectors(void *where, uint32_t lba, int count)
 {
     if(lba >= sectors_count)
         return;
@@ -78,5 +76,33 @@ void read_sectors(void *where, uint32_t lba, int count)
     for(int i = 0; i < 15; i++) inb(status);
 
     // Read sectors (don't do this, do what the spec says)
-    insw(ATA_IO_BASE, where, count * 256);
+    uint32_t out = insw(ATA_IO_BASE, where, count * 256);
+
+    /*
+    puts("Out: ", 0xf);
+    put_hex(out >> 24, 0xf);
+    put_hex(out >> 16, 0xf);
+    put_hex(out >> 8, 0xf);
+    put_hex(out, 0xf);
+    puts("\n\r", 0xf);
+
+    uint32_t who = where;
+    puts("Who: ", 0xf);
+    put_hex(who >> 24, 0xf);
+    put_hex(who >> 16, 0xf);
+    put_hex(who >> 8, 0xf);
+    put_hex(who, 0xf);
+    puts("\n\r", 0xf);
+    */
+
+    sectors_lba = lba + 1;
+
+    return out;
+}
+
+uint32_t read_consec_sectors(void *where, int count)
+{
+    uint32_t out = read_sectors(where, sectors_lba, count);
+    sectors_lba += count;
+    return out;
 }

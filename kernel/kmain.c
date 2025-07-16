@@ -2,6 +2,7 @@
 #include "vga.h"
 #include "keyboard.h"
 #include "ata.h"
+#include "fat.h"
 
 void kmain()
 {
@@ -9,30 +10,12 @@ void kmain()
     init_screen();
     kbd_init();
 
-    char col = 0x10;
-    for(int i = 0; i < 16; i++)
-    {
-        puts("Hello, World From the Kernel!!!!\n\r", col);
-        col++;
-    }
+    char col = 0xc;
+    puts("                          Hello, World From the Kernel!!!!\n\r", col);
 
-    uint8_t status = hdd_status();
-    put_hex(status, 0x0f);
-    puts("\n\r", 0x0f);
+    hdd_status();
 
-    // read this stuff at the end of the kernel no problem
-    extern uint32_t _KERNEL_END_;
-    uint8_t *s = _KERNEL_END_;
-
-    for(int i = 0; i < 10; i++)
-        put_hex(s[i], 0xf);
-    puts("\n\r", 0x0f);
-
-    read_sectors(_KERNEL_END_, 0, 1);
-
-    put_hex(s[510], 0xf);
-    put_hex(s[511], 0xf);
-    puts("\n\r", 0x0f);
+    load_filesystem();
 
     /*
     while(1)
@@ -68,9 +51,11 @@ uint16_t inw(uint16_t port)
     return data;
 }
 
-void insw(uint16_t port, void *addr, uint32_t size)
+uint32_t insw(uint16_t port, void *addr, uint32_t size)
 {
-    __asm__("rep insw" : : "D" (addr), "d" (port), "c" (size));
+    uint32_t ret;
+    __asm__("cld\nrep insw" : "=r" (ret) : "D" (addr), "d" (port), "c" (size));
+    return ret;
 }
 
 void outb(uint16_t port, uint8_t data)
