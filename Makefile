@@ -25,7 +25,7 @@ $(BUILD_DIR)/bootloader.bin: bootloader/boot.asm
 
 ###
 
-KSRS := kinit.c kmain.c vga.c keyboard.c ata.c fat.c
+KSRS := kinit.c kmain.c vga.c keyboard.c ata.c fat.c mem.c
 KOBJ := $(patsubst %.c, $(BUILD_DIR)/%.o, $(KSRS))
 
 $(BUILD_DIR)/kernel.bin: $(KOBJ)

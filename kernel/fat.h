@@ -29,6 +29,14 @@ typedef struct dirent_t
 
 void load_filesystem();
 
-extern uint8_t *_FILESYSTEM_END_;
+typedef struct file_t
+{
+    struct file_t *next;
+    uint16_t fat;
+    char payload[512];
+} file_t;
+
+// read a file in the root directory
+file_t *read_root_file(char *name);
 
 #endif

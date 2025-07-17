@@ -78,7 +78,6 @@ uint32_t read_sectors(void *where, uint32_t lba, int count)
     // Read sectors (don't do this, do what the spec says)
     uint32_t out = insw(ATA_IO_BASE, where, count * 256);
 
-    /*
     puts("Out: ", 0xf);
     put_hex(out >> 24, 0xf);
     put_hex(out >> 16, 0xf);
@@ -93,7 +92,6 @@ uint32_t read_sectors(void *where, uint32_t lba, int count)
     put_hex(who >> 8, 0xf);
     put_hex(who, 0xf);
     puts("\n\r", 0xf);
-    */
 
     sectors_lba = lba + 1;
 
@@ -105,4 +103,9 @@ uint32_t read_consec_sectors(void *where, int count)
     uint32_t out = read_sectors(where, sectors_lba, count);
     sectors_lba += count;
     return out;
+}
+
+uint16_t get_current_lba()
+{
+    return sectors_lba;
 }

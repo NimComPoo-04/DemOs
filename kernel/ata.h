@@ -18,5 +18,6 @@ uint8_t hdd_status();
 uint32_t read_sectors(void *where, uint32_t lba, int count);
 uint32_t read_consec_sectors(void *where, int count);
 uint32_t get_total_sectors();
+uint16_t get_current_lba();
 
 #endif

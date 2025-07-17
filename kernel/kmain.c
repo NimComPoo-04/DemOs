@@ -3,12 +3,14 @@
 #include "keyboard.h"
 #include "ata.h"
 #include "fat.h"
+#include "mem.h"
 
 void kmain()
 {
     for(int i = 0; i < 800000; i++);
     init_screen();
     kbd_init();
+    init_allocator();
 
     char col = 0xc;
     puts("                          Hello, World From the Kernel!!!!\n\r", col);
